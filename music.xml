@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<music>
+    <song id="1">
+        <songTitle>bad guy</songTitle>
+        <artist>Billie Eilish</artist>
+        <albums>
+            <album>WHEN WE ALL FALL ASLEEP, WHERE DO WE GO?</album>
+            <album>Happier Than Ever</album>
+        </albums>
+        <debutYear>2019</debutYear>
+    </song>
+    <song id="2">
+        <songTitle>Dynamite</songTitle>
+        <artist>BTS</artist>
+        <albums>
+            <album>BE</album>
+            <album>Map of the Soul: 7</album>
+            <album>Love Yourself: Answer</album>
+        </albums>
+        <debutYear>2020</debutYear>
+    </song>
+    <song id="3">
+        <songTitle>Hello</songTitle>
+        <artist>Adele</artist>
+        <albums>
+            <album>25</album>
+            <album>30</album>
+            <album>21</album>
+        </albums>
+        <debutYear>2015</debutYear>
+    </song>
+    <song id="4">
+        <songTitle>HUMBLE.</songTitle>
+        <artist>Kendrick Lamar</artist>
+        <albums>
+            <album>DAMN.</album>
+            <album>good kid, m.A.A.d city</album>
+            <album>To Pimp a Butterfly</album>
+        </albums>
+        <debutYear>2017</debutYear>
+    </song>
+    <song id="5">
+        <songTitle>Say So</songTitle>
+        <artist>Doja Cat</artist>
+        <albums>
+            <album>Hot Pink</album>
+            <album>Planet Her</album>
+        </albums>
+        <debutYear>2020</debutYear>
+    </song>
+</music>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Vault</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #1a1a1a;
+            margin: 0;
+            padding: 20px;
+            color: #e0e0e0;
+        }
+
+        h1 {
+            color: #ff6f61;
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 3em;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        h2 {
+            color: #6b5b95;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        /* Music Library Styles */
+        #music-list {
+            background-color: #2a2a2a;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin: 10px 0;
+            padding: 15px;
+            border: 1px solid #444;
+            border-radius: 8px;
+            background-color: #333;
+            font-size: 1em;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        li:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .songTitle {
+            font-weight: bold;
+            color: #ff6f61;
+            font-size: 1.2em;
+        }
+
+        .artist {
+            color: #6b5b95;
+        }
+
+        .albums {
+            color: #88b04b;
+        }
+
+        .debutYear {
+            color: #ffcc5c;
+        }
+
+        /* Query Section Styles */
+        #query-section {
+            margin-top: 40px;
+            background-color: #2a2a2a;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+            margin: 40px auto;
+        }
+
+        #query-input {
+            width: calc(100% - 130px);
+            padding: 12px;
+            border: 1px solid #444;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-right: 10px;
+            background-color: #333;
+            color: #e0e0e0;
+        }
+
+        button {
+            padding: 12px 25px;
+            background-color: #6b5b95;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #524578;
+        }
+
+        #query-results {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #444;
+            border-radius: 8px;
+            background-color: #333;
+            color: #e0e0e0;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Music Vault</h1>
+    <div id="music-list"></div>
+
+    <div id="query-section">
+        <h2>XPath Query</h2>
+        <div>
+            <label for="query-input">Enter XPath Query:</label>
+            <input type="text" id="query-input" placeholder="e.g., //song[@id='1']" />
+            <button onclick="runXPath()">Run Query</button>
+        </div>
+        <div id="query-results">
+            Results will appear here...
+        </div>
+    </div>
+
+    <script>
+        function loadLibrary() {
+            const xmlReq = new XMLHttpRequest();
+            const xslReq = new XMLHttpRequest();
+
+            xmlReq.open("GET", "music.xml", false);
+            xslReq.open("GET", "music.xsl", false);
+            xmlReq.send(null);
+            xslReq.send(null);
+
+            const processor = new XSLTProcessor();
+            processor.importStylesheet(xslReq.responseXML);
+            const result = processor.transformToFragment(xmlReq.responseXML, document);
+
+            document.getElementById("music-list").appendChild(result);
+        }
+
+        let xmlDoc;
+
+        function loadXMLDoc() {
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "music.xml", false);
+            xhr.send(null);
+            xmlDoc = new DOMParser().parseFromString(xhr.responseText, "text/xml");
+        }
+
+        function runXPath() {
+            const query = document.getElementById("query-input").value;
+            const resultsDiv = document.getElementById("query-results");
+
+            if (!xmlDoc) {
+                loadXMLDoc();
+            }
+
+            try {
+                const result = xmlDoc.evaluate(
+                    query,
+                    xmlDoc,
+                    null,
+                    XPathResult.ANY_TYPE,
+                    null
+                );
+
+                let output = "";
+                let node = result.iterateNext();
+
+                while (node) {
+                    output += `<div>${node.nodeValue || node.textContent}</div>`;
+                    node = result.iterateNext();
+                }
+
+                if (!output) {
+                    output = "No results found.";
+                }
+
+                resultsDiv.innerHTML = output;
+            } catch (error) {
+                resultsDiv.innerHTML = `Error: ${error.message}`;
+            }
+        }
+
+        window.onload = function () {
+            loadLibrary();
+            loadXMLDoc();
+        };
+    </script>
+</body>
+</html>
